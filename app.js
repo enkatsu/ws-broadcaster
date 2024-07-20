@@ -6,6 +6,7 @@ const WebSocketServer = require('ws').WebSocketServer
 
 const serverOption = isHttps ? {
     cert: readFileSync(process.env.CERT_PEM),
+    ca: readFileSync(process.env.CA_PEM),
     key: readFileSync(process.env.KEY_PEM),
 } : { }
 
