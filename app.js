@@ -5,9 +5,9 @@ const readFileSync = require('fs').readFileSync
 const WebSocketServer = require('ws').WebSocketServer
 
 const serverOption = isHttps ? {
-    cert: readFileSync(process.env.CERT_PEM),
-    ca: readFileSync(process.env.CA_PEM),
-    key: readFileSync(process.env.KEY_PEM),
+    cert: readFileSync(process.env.CERT_PEM).toString(),
+    ca: readFileSync(process.env.CA_PEM).toString(),
+    key: readFileSync(process.env.KEY_PEM).toString(),
 } : { }
 
 const server = createServer(serverOption)
