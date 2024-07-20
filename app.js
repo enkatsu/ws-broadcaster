@@ -1,15 +1,8 @@
 require('dotenv').config()
-const isHttps = process.env.HTTPS === 'true'
-const createServer = isHttps ? require('https').createServer : require('http').createServer
-const readFileSync = require('fs').readFileSync
+const createServer = require('http').createServer
 const WebSocketServer = require('ws').WebSocketServer
 
-const serverOption = isHttps ? {
-    cert: readFileSync(process.env.CERT_PEM, 'utf8'),
-    ca: readFileSync(process.env.CA_PEM, 'utf8'),
-    key: readFileSync(process.env.KEY_PEM, 'utf8'),
-} : { }
-
+const serverOption = { }
 const server = createServer(serverOption)
 const wss = new WebSocketServer({ server })
 
@@ -21,6 +14,9 @@ wss.on('connection', function connection(ws) {
         wss.clients.forEach(client => {
             client.send(data.toString('UTF-8'))
         })
+    })
+    ws.on('close', function () {
+        console.log(`client count: ${wss.clients.size}`)
     })
 })
 
