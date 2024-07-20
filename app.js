@@ -1,25 +1,26 @@
-import { createServer } from 'http';
-// import { createServer } from 'https';
-import { readFileSync } from 'fs';
+require('dotenv').config()
+const isHttps = process.env.HTTPS === 'true'
+const createServer = isHttps ? require('https').createServer : require('http').createServer
+const readFileSync = require('fs').readFileSync
+const WebSocketServer = require('ws').WebSocketServer
 
-import { WebSocketServer } from 'ws';
+const serverOption = isHttps ? {
+    cert: readFileSync('/path/to/cert.pem'),
+    key: readFileSync('/path/to/key.pem'),
+} : {
+}
 
-const server = createServer({
-    // cert: readFileSync('/path/to/cert.pem'),
-    // key: readFileSync('/path/to/key.pem'),
-});
-const wss = new WebSocketServer({
-    server,
-});
+const server = createServer(serverOption)
+const wss = new WebSocketServer({ server })
 
 wss.on('connection', function connection(ws) {
-    ws.on('error', console.error);
-
+    ws.on('error', console.error)
     ws.on('message', function message(data) {
-        ws.clients.forEach(client => {
-            client.send(data);
-        });
-    });
-});
+        console.log(data.toString('UTF-8'))
+        wss.clients.forEach(client => {
+            client.send(data.toString('UTF-8'))
+        })
+    })
+})
 
-server.listen(8080);
+server.listen(8080)
