@@ -5,11 +5,13 @@
   "main": "app.js",
   "dependencies": {
     "dotenv": "^16.4.5",
+    "forever": "^4.0.3",
     "ws": "^8.18.0"
   },
-  "devDependencies": {},
   "scripts": {
-    "start": "node app.js"
+    "dev": "node app.js",
+    "prd:start": "npx forever start -o logs/out.log -e logs/err.log ./app.js",
+    "prd:stop": "npx forever stop ./app.js"
   },
   "author": "",
   "license": "ISC"
